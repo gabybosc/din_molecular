@@ -42,3 +42,21 @@ double mean(double *vector, int length, int k, int j){//para el mean normal, tom
 
 return(avg/length);
 }
+
+int find_nearest(double escalar, double *puntero, int longitud_puntero){
+  double diferencia, delta;
+  int indice, i;
+
+  diferencia = 100000000;
+  indice = -1;
+
+  for (i = 0; i < longitud_puntero; i++){
+    delta = *(puntero+i) - escalar;
+    if (delta < diferencia){
+      diferencia = delta;
+      indice = i;
+    }
+  }//end loop
+
+return indice;
+}
