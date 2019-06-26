@@ -22,15 +22,21 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
   return 0;
 }
 
-double forces(double *x, double *f, double *tabla_f, double *tabla_x, int long_tabla){ //*f tiene que estar calloc-queada
+double forces(double *r, double *f, double *tabla_f, double *tabla_r, int long_tabla, int N){ //*f tiene que estar calloc-queada
   int i, j, indice;
-  double r2;
-
+  double x, y, z, r2, fuerza_par;
+// vamos a necesitar: x, y, z, fuerza_par
   for(i = 1; i < N; i++){
-    r2 = pow(*x - *(x+3*i), 2) + pow(*(x+1) - *(x+3*i+1), 2) + pow(*(x+2) - *(x+3*i+2), 2);
-    indice = find_nearest(r2, *tabla_x, long_tabla);
-    *f += *(tabla_f+indice);
+    x = *r - *(r+3*i);
+    y = *(r+1) - *(r+3*i+1);
+    z = *(r+2) - *(r+3*i+2);
+    r2 = pow(x, 2) + pow(y, 2) + pow(z, 2);
+    indice = find_nearest(r2, tabla_r, long_tabla);
+    fuerza_par = *(tabla_f+indice);
+    *f += fuerza_par * x / sqrt(r2); //fx
+    *(f+1) += fuerza_par * y / sqrt(r2); //fy
+    *(f+2) += fuerza_par * z / sqrt(r2); //fz
   }
-
+  printf("indice = %f\n", indice); //corregir find_nearest
 return 0;
 }
