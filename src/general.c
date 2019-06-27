@@ -51,7 +51,7 @@ int find_nearest(double escalar, double *puntero, int longitud_puntero){
   indice = -1;
 
   for (i = 0; i < longitud_puntero; i++){
-    delta = *(puntero+i) - escalar;
+    delta = abs(*(puntero+i) - escalar);
     if (delta < diferencia){
       diferencia = delta;
       indice = i;
@@ -59,4 +59,32 @@ int find_nearest(double escalar, double *puntero, int longitud_puntero){
   }//end loop
 
 return indice;
+}
+
+int contador_lineas(FILE *file){
+  char c;
+  int lines = 0;
+
+  for (c = getc(file); c != EOF; c = getc(file))
+        if (c == '\n') // Increment count if this character is newline
+            lines = lines + 1;
+            
+  rewind(file);
+
+  return lines;
+}
+
+int leer_tabla(FILE *file, double *r_tabla, double *r2_tabla, double *f_tabla, double *v_tabla){
+  double r_LUT, r2_LUT, f_LUT, v_LUT;
+  int i=0;
+
+  while (fscanf(file, "%lf %lf %lf %lf", &r_LUT, &r2_LUT, &f_LUT, &v_LUT) == 4){
+    *(r_tabla+i) = r_LUT;
+    *(r2_tabla+i) = r2_LUT;
+    *(f_tabla+i) = f_LUT;
+    *(v_tabla+i) = v_LUT;
+    i += 1;
+  }
+
+  return 0;
 }

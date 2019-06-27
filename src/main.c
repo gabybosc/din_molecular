@@ -1,7 +1,7 @@
 #include "general.h"
 #include "inicializar.h"
 #include "interaccion.h"
-// #include "tabla.h"
+#include "avanzar.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -9,46 +9,51 @@
 #include <unistd.h>
 
 #define N 27
+#define L 9 //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
+#define T 1
+#define H 0.001
+
 
 int main(){
   double dL;
-  double *r, *f, *r_tabla, *f_tabla;
-  double r_LUT, r2_LUT, f_LUT, v_LUT;
-  int lines, i=0;
-  char c;
+  double *r, *f, *vel, *r2_tabla, *r_tabla, *f_tabla, *V_tabla;
+  int lines, i;
   FILE *file;
 
   file = fopen( "tabla_LJ.txt", "r");
-  lines = 0;
-  for (c = getc(file); c != EOF; c = getc(file))
-        if (c == '\n') // Increment count if this character is newline
-            lines = lines + 1;
-  printf("number of lines in file %d\n", lines);
-
+  lines = contador_lineas(file);
 
   r = malloc(3*N * sizeof(double));
   f = calloc(3*N, sizeof(double));
+  vel = malloc(3*N * sizeof(double));
   r_tabla = malloc((lines-1) * sizeof(double));
+  r2_tabla = malloc((lines-1) * sizeof(double));
   f_tabla = malloc((lines-1) * sizeof(double));
+  V_tabla = malloc((lines-1) * sizeof(double));
 
-  dL = set_box(r, N, 10);
-  printf("dL = %f\n",dL);
-  forces(r, f, f_tabla, r_tabla, lines-1, N);
+  dL = set_box(r, N, L);
+  set_vel(vel, N, T);
 
-  while (fscanf(file, "%lf %lf %lf %lf", &r_LUT, &r2_LUT, &f_LUT, &v_LUT) != EOF){
-    *(f_tabla+i) = f_LUT;
-    *(r_tabla+i) = r_LUT;
-    i += 1;
+  leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
+  printf("Condiciones iniciales\n");
+  printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+  for(i = 0; i < 10000; i++){
+    velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
+    CCP(r, N, L);
   }
 
-  printf("%f,%f,%f\n", *f, *(f+1), *(f+2));
+  printf("Final\n");
+  printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 
   fclose(file);
 
   free(r);
   free(f);
-  free(r_tabla);
+  free(vel);
+  free(r2_tabla);
   free(f_tabla);
+  free(r_tabla);
+  free(V_tabla);
 
   return 0;
 }

@@ -22,21 +22,46 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
   return 0;
 }
 
-double forces(double *r, double *f, double *tabla_f, double *tabla_r, int long_tabla, int N){ //*f tiene que estar calloc-queada
+double forces(double *r, double *f, double *tabla_f, double *tabla_r2, int long_tabla, int N, int L){ //*f tiene que estar calloc-queada
   int i, j, indice;
-  double x, y, z, r2, fuerza_par;
-// vamos a necesitar: x, y, z, fuerza_par
-  for(i = 1; i < N; i++){
-    x = *r - *(r+3*i);
-    y = *(r+1) - *(r+3*i+1);
-    z = *(r+2) - *(r+3*i+2);
-    r2 = pow(x, 2) + pow(y, 2) + pow(z, 2);
-    indice = find_nearest(r2, tabla_r, long_tabla);
-    fuerza_par = *(tabla_f+indice);
-    *f += fuerza_par * x / sqrt(r2); //fx
-    *(f+1) += fuerza_par * y / sqrt(r2); //fy
-    *(f+2) += fuerza_par * z / sqrt(r2); //fz
-  }
-  printf("indice = %f\n", indice); //corregir find_nearest
+  double dx, dy, dz, r2, fuerza_par;
+  for(j=0; j< N-1; j++){
+    for(i = j+1; i < N; i++){
+      dx = *(r+3*j) - *(r+3*i);
+      dy = *(r+3*j+1) - *(r+3*i+1);
+      dz = *(r+3*j+2) - *(r+3*i+2);
+
+      if(dx > L/2)
+        dx -= L;
+      else if(dx < -L/2)
+        dx += L;
+      if(dy > L/2)
+        dy -= L;
+      else if(dy < -L/2)
+        dy += L;
+      if(dz > L/2)
+        dz -= L;
+      else if(dz < -L/2)
+        dz += L;
+
+
+      r2 = pow(dx, 2) + pow(dy, 2) + pow(dz, 2);
+
+      if(r2 < pow(2.5, 2)){ //solo dentro del radio de corte
+        indice = find_nearest(r2, tabla_r2, long_tabla);
+        fuerza_par = *(tabla_f+indice);
+
+        *(f+3*j) += fuerza_par * dx / sqrt(r2); //fx
+        *(f+3*j+1) += fuerza_par * dy / sqrt(r2); //fy
+        *(f+3*j+2) += fuerza_par * dz / sqrt(r2); //fz
+
+        *(f+3*i) -= fuerza_par * dx / sqrt(r2); //fx
+        *(f+3*i+1) -= fuerza_par * dy / sqrt(r2); //fy
+        *(f+3*i+2) -= fuerza_par * dz / sqrt(r2); //fz
+      }
+
+    }//end loop i
+  }//end loop j
+
 return 0;
 }
