@@ -15,6 +15,15 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
   *r = *r + *v *h + *f * pow(h,2)/2;
   *(r+1) = *(r+1) + *(v+1) *h + *(f+1) * pow(h,2)/2;
   *(r+2) = *(r+2) + *(v+2) *h + *(f+2) * pow(h,2)/2;
+ 
+ //Acá hay que agregar las CCP!!!
+ 
+  for(i=0; i < 3*N; i++){
+    if(*(r+i) < 0)
+      *(r+i) += L;
+    else if(*(r+i) > L)
+      *(r+i) -= L;
+  }  
 
   for(i=0; i < 3*N; i++)
     f_buffer[i] = *(f+i);
