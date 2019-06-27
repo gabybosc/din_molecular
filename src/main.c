@@ -39,7 +39,6 @@ int main(){
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
   for(i = 0; i < 10000; i++){
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
-    CCP(r, N, L);
   }
 
   printf("Final\n");
