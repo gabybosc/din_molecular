@@ -70,3 +70,16 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 
 return 0;
 }
+
+
+int CCP(double *r, int N, double L){
+  int i;
+  for(i=0; i < 3*N; i++){
+    if(*(r+i) < 0)
+      *(r+i) += L;
+    else if(*(r+i) > L)
+      *(r+i) -= L;
+  }
+
+  return 0;
+}

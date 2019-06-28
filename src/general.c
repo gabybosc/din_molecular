@@ -69,7 +69,7 @@ int contador_lineas(FILE *file){
   for (c = getc(file); c != EOF; c = getc(file))
         if (c == '\n') // si se encuentra un newline aumenta el contador lineas
             lines = lines + 1;
-            
+
   rewind(file);
 
   return lines;
@@ -89,4 +89,32 @@ int leer_tabla(FILE *file, double *r_tabla, double *r2_tabla, double *f_tabla, d
   }
 
   return 0;
+}
+
+double max(double *pointer, int longitud){
+  double ref;
+  int i;
+
+  ref = *pointer;
+
+  for(i=0; i<longitud; i++){
+    if(*(pointer+i) > ref)
+      ref = *(pointer+i);
+  }//end loop
+
+  return ref;
+}
+
+double min(double *pointer, int longitud){
+  double ref;
+  int i;
+
+  ref = *pointer;
+
+  for(i=0; i<longitud; i++){
+    if(*(pointer+i) < ref)
+      ref = *(pointer+i);
+  }//end loop
+
+  return ref;
 }

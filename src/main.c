@@ -8,7 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define N 27
+#define N 512
 #define L 9 //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
 #define T 1
 #define H 0.001
@@ -36,7 +36,7 @@ int main(){
   leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
   printf("Condiciones iniciales\n");
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
-  for(i = 0; i < 10000; i++){
+  for(i = 0; i < 10; i++){
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
   }
 
