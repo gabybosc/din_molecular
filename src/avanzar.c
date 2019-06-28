@@ -31,3 +31,38 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 
   return 0;
 }
+
+
+int hist(double *puntero, int longitud, int k, int j){
+	int i, indice, n_bins, *histograma;
+	double *vector;
+	double maxvalue, minvalue, width;
+	
+	vector = malloc(longitud * sizeof(double));
+  for (i=0; i<longitud; i++)
+	  *(vector+i) = *(puntero+(k*i+j)); //recorre de a k lugares, con offset j
+	  
+	maxvalue = max(vector, longitud);
+	minvalue = min(vector, longitud);
+	n_bins = 2*cbrt(longitud);
+	width=(maxvalue - minvalue)/n_bins;	
+	
+	histograma = calloc(n_bins,sizeof(int));
+	
+	for (i=0; i<longitud; i++){
+		if (*(vector+i)==maxvalue){
+			indice = n_bins-1;
+		}else{
+			indice = (int)((*(vector+i) - minvalue)/width);
+		}
+		*(histograma+indice)+=1;
+	}//end loop i
+	
+	for (i=0; i<n_bins; i++)
+		printf("%d ",*(histograma+i));
+	printf("\n");
+	
+	free(vector);
+	free(histograma);
+	return 0;
+}

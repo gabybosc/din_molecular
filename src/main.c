@@ -30,18 +30,28 @@ int main(){
   f_tabla = malloc((lines-1) * sizeof(double));
   V_tabla = malloc((lines-1) * sizeof(double));
 
+  leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
+
   dL = set_box(r, N, L);
   set_vel(vel, N, T);
 
-  leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
   printf("Condiciones iniciales\n");
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
-  for(i = 0; i < 10; i++){
+
+  for(i = 0; i < 3; i++){
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
   }
 
   printf("Final\n");
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+  
+  //histograma de velocidad x
+  printf("Histograma velocidad x\n");
+  hist(vel, N, 3, 0);
+  printf("Histograma velocidad y\n");
+  hist(vel, N, 3, 1);
+  printf("Histograma velocidad z\n");
+  hist(vel, N, 3, 2);
 
   fclose(file);
 
@@ -55,3 +65,4 @@ int main(){
 
   return 0;
 }
+
