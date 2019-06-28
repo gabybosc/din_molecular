@@ -22,15 +22,22 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
   return 0;
 }
 
-double forces(double *r, double *f, double *tabla_f, double *tabla_r2, int long_tabla, int N, int L){ //*f tiene que estar calloc-queada
+double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_tabla, int N, int L){
   int i, j, indice;
   double dx, dy, dz, r2, fuerza_par;
+
+	//set fuerzas a 0
+	for (i=0; i<3*N; i++){
+		*(f+i) = 0;
+	}
+
   for(j=0; j< N-1; j++){
     for(i = j+1; i < N; i++){
       dx = *(r+3*j) - *(r+3*i);
       dy = *(r+3*j+1) - *(r+3*i+1);
       dz = *(r+3*j+2) - *(r+3*i+2);
 
+			// si cae fuera de la caja, lo corregimos
       if(dx > L/2)
         dx -= L;
       else if(dx < -L/2)
@@ -43,7 +50,6 @@ double forces(double *r, double *f, double *tabla_f, double *tabla_r2, int long_
         dz -= L;
       else if(dz < -L/2)
         dz += L;
-
 
       r2 = pow(dx, 2) + pow(dy, 2) + pow(dz, 2);
 
@@ -58,8 +64,7 @@ double forces(double *r, double *f, double *tabla_f, double *tabla_r2, int long_
         *(f+3*i) -= fuerza_par * dx / sqrt(r2); //fx
         *(f+3*i+1) -= fuerza_par * dy / sqrt(r2); //fy
         *(f+3*i+2) -= fuerza_par * dz / sqrt(r2); //fz
-      }
-
+      }// end if
     }//end loop i
   }//end loop j
 

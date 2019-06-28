@@ -32,12 +32,13 @@ double gaussiana(double mu, double sigma){
 
 
 double mean(double *vector, int length, int k, int j){//para el mean normal, tomar k = 1, j =0.
-	//valor medio de un vector. Calcula el vector diezmado v[k*i+j]
+	// valor medio del puntero. Calcula el vector diezmado v[k*i+j]
+	// length es longitud del vector ya diezmado
 	int i;
 	double avg = 0;
 
 	for (i = 0; i < length; i++){
-		avg += *(vector+(k*i+j)); //recorre de a k lugares salteando j pasos
+		avg += *(vector+(k*i+j)); //recorre de a k lugares, con offset j
 	}
 
 return(avg/length);
@@ -47,8 +48,8 @@ int find_nearest(double escalar, double *puntero, int longitud_puntero){
   double diferencia, delta;
   int indice, i;
 
-  diferencia = 100000000;
-  indice = -1;
+  diferencia = abs(*puntero - escalar);
+  indice = 0;
 
   for (i = 0; i < longitud_puntero; i++){
     delta = abs(*(puntero+i) - escalar);
@@ -66,7 +67,7 @@ int contador_lineas(FILE *file){
   int lines = 0;
 
   for (c = getc(file); c != EOF; c = getc(file))
-        if (c == '\n') // Increment count if this character is newline
+        if (c == '\n') // si se encuentra un newline aumenta el contador lineas
             lines = lines + 1;
             
   rewind(file);
@@ -75,6 +76,7 @@ int contador_lineas(FILE *file){
 }
 
 int leer_tabla(FILE *file, double *r_tabla, double *r2_tabla, double *f_tabla, double *v_tabla){
+	// hay que pasarle el archivo que tiene que leer y los punteros donde guarda las cosas
   double r_LUT, r2_LUT, f_LUT, v_LUT;
   int i=0;
 

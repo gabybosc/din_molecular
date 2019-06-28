@@ -13,7 +13,6 @@
 #define T 1
 #define H 0.001
 
-
 int main(){
   double dL;
   double *r, *f, *vel, *r2_tabla, *r_tabla, *f_tabla, *V_tabla;

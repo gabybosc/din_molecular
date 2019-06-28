@@ -1,6 +1,7 @@
 #include "general.h"
 #include "interaccion.h"
 #include "inicializar.h"
+#include "avanzar.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -28,7 +29,7 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
   for(i=0; i < 3*N; i++)
     f_buffer[i] = *(f+i);
 
-  forces(r, f, tabla_f, tabla_r2, long_tabla, N, L);
+  forces(r, f, tabla_r2, tabla_f, long_tabla, N, L);
 
   //avanzamos vx, vy, vz de la particula 0
   *v = *v + (f_buffer[0] + *f) * h/2;
