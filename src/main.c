@@ -8,11 +8,11 @@
 #include <time.h>
 #include <unistd.h>
 
-#define T 1 //0.728
+#define T 5 //0.728
 #define RO 0.8442
-#define N 27 // N tiene que ser un cubo
+#define N 216 // N tiene que ser un cubo: 27 (cambiar el lado o densidad), 216, 343, 512
 #define L cbrt(N/RO) //L tiene que ser >5 para no tener problemas con el radio de corte
-#define H 0.001
+#define H 0.005//0.001
 
 int main(){
 	double dL;
@@ -39,7 +39,7 @@ int main(){
 	set_vel(vel, N, T);
 
 	printf("CONDICIONES INICIALES\n");
-	printf("r\t= %f %f %f\nvel\t= %f %f %f\nfuerza\t= %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+	printf("r\t= %lf %lf %lf\nvel\t= %lf %lf %lf\nfuerza\t= %lf %lf %lf\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 
 	printf("Histograma vx\n");
 	hist(histograma, vel, N, 3, 0);
@@ -52,7 +52,7 @@ int main(){
 		velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
 
 	printf("CONDICIONES FINALES\n");
-	printf("r\t= %f %f %f\nvel\t= %f %f %f\nfuerza\t= %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+	printf("r\t= %lf %lf %lf\nvel\t= %lf %lf %lf\nfuerza\t= %lf %lf %lf\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 	
 	printf("Histograma vx\n");
 	hist(histograma, vel, N, 3, 0);

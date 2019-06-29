@@ -1,6 +1,5 @@
 #include "general.h"
 #include "interaccion.h"
-#include "inicializar.h"
 #include "avanzar.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,9 +16,9 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 
 	//avanzamos x, y, z de la partícula i
 	for (i=0; i<N; i++){
-		*(r+3*i) = *(r+3*i) + *(v+3*i) *h + *(f+3*i) * pow(h,2)/2;
-		*(r+3*i+1) = *(r+3*i+1) + *(v+3*i+1) *h + *(f+3*i+1) * pow(h,2)/2;
-		*(r+3*i+2) = *(r+3*i+2) + *(v+3*i+2) *h + *(f+3*i+2) * pow(h,2)/2;
+		*(r+3*i) += *(v+3*i) *h + *(f+3*i) * pow(h,2)/2;
+		*(r+3*i+1) += *(v+3*i+1) *h + *(f+3*i+1) * pow(h,2)/2;
+		*(r+3*i+2) += *(v+3*i+2) *h + *(f+3*i+2) * pow(h,2)/2;
 	}//end loop i posicion
 	
 	CCP(r,N,L);
@@ -28,10 +27,11 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 
 	//avanzamos vx, vy, vz de la particula i
 	for (i=0; i<N; i++){
-		*(v+3*i) = *(v+3*i) + (f_buffer[3*i] + *(f+3*i)) * h/2;
-		*(v+3*i+1) = *(v+3*i+1) + (f_buffer[3*i+1] + *(f+3*i+1)) * h/2;
-		*(v+3*i+2) = *(v+3*i+2) + (f_buffer[3*i+2] + *(f+3*i+2)) * h/2;
+		*(v+3*i) += (f_buffer[3*i] + *(f+3*i)) * h/2;
+		*(v+3*i+1) += (f_buffer[3*i+1] + *(f+3*i+1)) * h/2;
+		*(v+3*i+2) += (f_buffer[3*i+2] + *(f+3*i+2)) * h/2;
 	}//end loop i velocidad
+
 	return 0;
 }
 
