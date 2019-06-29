@@ -5,29 +5,28 @@
 #include <time.h>
 #include <unistd.h>
 
-double norma_cuadrado(double *vector, int N){//N es el len(vector)
-  double suma = 0;
-  int i;
+double norma_cuadrado(double *vector, int N){//N es len(vector)
+	double suma = 0;
+	int i;
 
-  for(i=0; i<N; i++){
-    suma += pow(*(vector+i), 2);
-  }
+	for(i=0; i<N; i++){
+		suma += pow(*(vector+i), 2);
+	}
 
-  return suma;
+	return suma;
 }
 
 double gaussiana(double mu, double sigma){
-  int n = 10;
-  int i;
-  double z = 0;
+	int n = 10;
+	int i;
+	double z = 0;
 
-  for(i = 0; i < n; i++){
-    z += ((double)rand()) / ((double)RAND_MAX);
-  }
+	for(i = 0; i < n; i++)
+		z += ((double)rand()) / ((double)RAND_MAX);
 
-  z = sqrt(12) * (z / n - 0.5);
+	z = sqrt(12) * (z / n - 0.5);
 
-  return z*sigma+mu;
+	return z*sigma+mu;
 }
 
 
@@ -44,77 +43,77 @@ double mean(double *vector, int length, int k, int j){//para el mean normal, tom
 return(avg/length);
 }
 
-int find_nearest(double escalar, double *puntero, int longitud_puntero){
-  double diferencia, delta;
-  int indice, i;
+int find_nearest(double escalar, double *puntero, int longitud_puntero){//devuelve indice del puntero mas cercano al escalar
+	double diferencia, delta;
+	int indice, i;
 
-  diferencia = abs(*puntero - escalar);
-  indice = 0;
+	diferencia = abs(*puntero - escalar);
+	indice = 0;
 
-  for (i = 0; i < longitud_puntero; i++){
-    delta = abs(*(puntero+i) - escalar);
-    if (delta < diferencia){
-      diferencia = delta;
-      indice = i;
-    }
-  }//end loop
+	for (i = 0; i < longitud_puntero; i++){
+		delta = abs(*(puntero+i) - escalar);
+		if (delta < diferencia){
+			diferencia = delta;
+			indice = i;
+		}
+	}//end loop
 
 return indice;
 }
 
 int contador_lineas(FILE *file){
-  char c;
-  int lines = 0;
+	char c;
+	int lines = 0;
 
-  for (c = getc(file); c != EOF; c = getc(file))
-        if (c == '\n') // si se encuentra un newline aumenta el contador lineas
-            lines = lines + 1;
+	for (c = getc(file); c != EOF; c = getc(file))
+		if (c == '\n') // si se encuentra un newline aumenta el contador lineas
+			lines = lines + 1;
 
-  rewind(file);
+	rewind(file);
 
-  return lines;
+	return lines;
 }
 
 int leer_tabla(FILE *file, double *r_tabla, double *r2_tabla, double *f_tabla, double *v_tabla){
-	// hay que pasarle el archivo que tiene que leer y los punteros donde guarda las cosas
-  double r_LUT, r2_LUT, f_LUT, v_LUT;
-  int i=0;
+	// argumentos: el archivo que tiene que leer y los punteros donde guarda las cosas
+	double r_LUT, r2_LUT, f_LUT, v_LUT;
+	int i=0;
 
-  while (fscanf(file, "%lf %lf %lf %lf", &r_LUT, &r2_LUT, &f_LUT, &v_LUT) == 4){
-    *(r_tabla+i) = r_LUT;
-    *(r2_tabla+i) = r2_LUT;
-    *(f_tabla+i) = f_LUT;
-    *(v_tabla+i) = v_LUT;
-    i += 1;
-  }
+	while (fscanf(file, "%lf %lf %lf %lf", &r_LUT, &r2_LUT, &f_LUT, &v_LUT) == 4){
+		*(r_tabla+i) = r_LUT;
+		*(r2_tabla+i) = r2_LUT;
+		*(f_tabla+i) = f_LUT;
+		*(v_tabla+i) = v_LUT;
+		i += 1;
+	}
 
-  return 0;
+	return 0;
 }
 
 double max(double *pointer, int longitud){
-  double ref;
-  int i;
+	double ref;
+	int i;
 
-  ref = *pointer;
+	ref = *pointer;
 
-  for(i=0; i<longitud; i++){
-    if(*(pointer+i) > ref)
-      ref = *(pointer+i);
-  }//end loop
+	for(i=0; i<longitud; i++){
+		if(*(pointer+i) > ref)
+			ref = *(pointer+i);
+	}//end loop
 
-  return ref;
+	return ref;
 }
 
 double min(double *pointer, int longitud){
-  double ref;
-  int i;
+	double ref;
+	int i;
 
-  ref = *pointer;
+	ref = *pointer;
 
-  for(i=0; i<longitud; i++){
-    if(*(pointer+i) < ref)
-      ref = *(pointer+i);
-  }//end loop
+	for(i=0; i<longitud; i++){
+		if(*(pointer+i) < ref)
+			ref = *(pointer+i);
+	}//end loop
 
-  return ref;
+	return ref;
 }
