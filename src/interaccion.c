@@ -82,3 +82,23 @@ int CCP(double *r, int N, double L){//condiciones de contorno periodicas (no rep
 	}
 	return 0;
 }
+
+double coef_verlet(double *r, int N, double L){
+  int i;
+  double a, lambda_x, lambda_y, lambda_z, lambda;
+  lambda_x = 0;
+  lambda_y = 0;
+  lambda_z = 0;
+
+  a = L / cbrt(N);
+
+  for(i=0; i<N; i++){
+    lambda_x += (1/N) * cos((2*pi/a)* (*(r+3*i) - a/2);
+    lambda_y += (1/N) * cos((2*pi/a)*(*(r+3*i+1 ) - a/2);
+    lambda_z += (1/N) * cos((2*pi/a)*(*(r+3*i+2) - a/2);
+  }
+  
+  lambda = 1.0/3 * (lambda_x + lambda_z + lambda_y);
+
+  return lambda;
+}
