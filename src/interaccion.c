@@ -6,6 +6,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#define PI 3.14159
+
 int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//calcula el pot y la fuerza de LJ para r² con epsilon = sigma = 1
 	double offset = 4 * (pow(2.5, -12) - pow(2.5, -6));
 	double r6, r;
@@ -93,11 +95,11 @@ double coef_verlet(double *r, int N, double L){
   a = L / cbrt(N);
 
   for(i=0; i<N; i++){
-    lambda_x += (1/N) * cos((2*pi/a)* (*(r+3*i) - a/2);
-    lambda_y += (1/N) * cos((2*pi/a)*(*(r+3*i+1 ) - a/2);
-    lambda_z += (1/N) * cos((2*pi/a)*(*(r+3*i+2) - a/2);
+    lambda_x += (1/N) * cos((2*PI/a)* (*(r+3*i) - a/2));
+    lambda_y += (1/N) * cos((2*PI/a)*(*(r+3*i+1 ) - a/2));
+    lambda_z += (1/N) * cos((2*PI/a)*(*(r+3*i+2) - a/2));
   }
-  
+
   lambda = 1.0/3 * (lambda_x + lambda_z + lambda_y);
 
   return lambda;
