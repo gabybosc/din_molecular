@@ -24,7 +24,7 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
 	return 0;
 }
 
-double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_tabla, int N, int L){
+double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_tabla, int N, double L){
 	int i, j, indice;
 	double dx, dy, dz, r2, fuerza_par;
 
@@ -77,9 +77,9 @@ int CCP(double *r, int N, double L){//condiciones de contorno periodicas (no rep
 	// si cae fuera de la caja, lo corregimos
 	int i;
 	for(i=0; i < 3*N; i++){
-		if(*(r+i) < 0)
+		while(*(r+i) < 0)
 			*(r+i) += L;
-		else if(*(r+i) > L)
+		while(*(r+i) > L)
 			*(r+i) -= L;
 	}
 	return 0;
