@@ -9,6 +9,7 @@
 
 int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, int long_tabla){
 	int i;
+	double h2 = pow(h,2)/2;
 
 	double f_buffer[3*N]; //para almacenar la fuerza del paso temporal anterior
 	for(i=0; i < 3*N; i++)
@@ -16,9 +17,9 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 
 	//avanzamos x, y, z de la partícula i
 	for (i=0; i<N; i++){
-		*(r+3*i) += *(v+3*i) *h + *(f+3*i) * pow(h,2)/2;
-		*(r+3*i+1) += *(v+3*i+1) *h + *(f+3*i+1) * pow(h,2)/2;
-		*(r+3*i+2) += *(v+3*i+2) *h + *(f+3*i+2) * pow(h,2)/2;
+		*(r+3*i) += *(v+3*i) *h + *(f+3*i) * h2;
+		*(r+3*i+1) += *(v+3*i+1) *h + *(f+3*i+1) * h2;
+		*(r+3*i+2) += *(v+3*i+2) *h + *(f+3*i+2) * h2;
 	}//end loop i posicion
 
 	CCP(r,N,L);
