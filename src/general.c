@@ -9,9 +9,8 @@ double norma_cuadrado(double *vector, int N){//N es len(vector)
 	double suma = 0;
 	int i;
 
-	for(i=0; i<N; i++){
+	for(i=0; i<N; i++)
 		suma += pow(*(vector+i), 2);
-	}
 
 	return suma;
 }
@@ -36,9 +35,8 @@ double mean(double *vector, int length, int k, int j){//para el mean normal, tom
 	int i;
 	double avg = 0;
 
-	for (i = 0; i < length; i++){
+	for (i = 0; i < length; i++)
 		avg += *(vector+(k*i+j)); //recorre de a k lugares, con offset j
-	}
 
 return(avg/length);
 }
@@ -67,7 +65,7 @@ int contador_lineas(FILE *file){
 
 	for (c = getc(file); c != EOF; c = getc(file))
 		if (c == '\n') // si se encuentra un newline aumenta el contador lineas
-			lines = lines + 1;
+			lines += 1;
 
 	rewind(file);
 
