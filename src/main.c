@@ -2,6 +2,7 @@
 #include "inicializar.h"
 #include "interaccion.h"
 #include "avanzar.h"
+#include "visualizacion.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -23,6 +24,11 @@ int main(){
   file = fopen( "tabla_LJ.txt", "r");
   lines = contador_lineas(file);
 
+  // El formato del filename ".lammpstrj", ese VMD lo lee comodamente
+  char filename[255];
+  sprintf(filename, "prueba.lammpstrj");
+  // int N_frames = 100;
+
   r = malloc(3*N * sizeof(double));
   f = malloc(3*N * sizeof(double));
   vel = malloc(3*N * sizeof(double));
@@ -33,7 +39,7 @@ int main(){
   histograma = malloc(2*cbrt(N) * sizeof(int));
 
   leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
-  
+
   dL = set_box(r, N, L);
   set_vel(vel, N, T);
 
@@ -48,12 +54,12 @@ int main(){
 	printf("Histograma vz\n");
 	hist(histograma, vel, N, 3, 2);
 	*/
-	
+
 
   for(i = 0; i < 5; i++){
     printf("paso %d\n", i);
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
-    printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+    save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
 
   printf("Final\n");
@@ -67,7 +73,7 @@ int main(){
 	printf("Histograma vz\n");
 	hist(histograma, vel, N, 3, 2);
 	*/
-	
+
   fclose(file);
 
   free(r);
