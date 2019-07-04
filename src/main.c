@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #define N 512
-#define L 8.5 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
+#define L 9.0 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
 #define T 0.8 //0.728
 #define H 0.001
 
@@ -55,8 +55,8 @@ int main(){
   hist(histograma, vel, N, 3, 2);
 
 
-  for(i = 0; i < 10; i++){
-    printf("%d%%\n", 10*i);
+  for(i = 0; i < 100; i++){
+    printf("%d%%\n", i);
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
     save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
