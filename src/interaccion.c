@@ -33,8 +33,8 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 	for (i=0; i<3*N; i++)
 		*(f+i) = 0;
 
-	for(j=0; j< N-1; j++){
-		for(i = j+1; i < N; i++){
+	for(i=0; i< N-1; i++){
+		for(j = i+1; j < N; j++){
 			dx = *(r+3*j) - *(r+3*i);
 			dy = *(r+3*j+1) - *(r+3*i+1);
 			dz = *(r+3*j+2) - *(r+3*i+2);
