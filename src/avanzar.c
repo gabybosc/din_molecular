@@ -7,14 +7,17 @@
 #include <time.h>
 #include <unistd.h>
 
-int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, int long_tabla){
+double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla){
 	int i;
 	double h2 = pow(h,2)/2;
-
+	double Epot, Etot, Ecin=0.0;
+	
 	double f_buffer[3*N]; //para almacenar la fuerza del paso temporal anterior
-	for(i=0; i < 3*N; i++)
+	for(i=0; i < 3*N; i++){
 		f_buffer[i] = *(f+i);
-
+		Ecin += pow(*(v+i),2);
+	}
+	
 	//avanzamos x, y, z de la partícula i
 	for (i=0; i<N; i++){
 		*(r+3*i) += *(v+3*i) *h + *(f+3*i) * h2;
@@ -24,7 +27,7 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 
 	CCP(r,N,L);
 
-	forces(r, f, tabla_r2, tabla_f, long_tabla, N, L);
+	Epot = forces(r, f, tabla_r2, tabla_f, tabla_v, long_tabla, N, L);
 
 	//avanzamos vx, vy, vz de la particula i
 	for (i=0; i<N; i++){
@@ -32,8 +35,10 @@ int velocity_verlet(double *r, double *v, double *f, int N, double h, double L, 
 		*(v+3*i+1) += (f_buffer[3*i+1] + *(f+3*i+1)) * h/2;
 		*(v+3*i+2) += (f_buffer[3*i+2] + *(f+3*i+2)) * h/2;
 	}//end loop i velocidad
-
-	return 0;
+	
+	Etot = Epot + Ecin;
+	
+	return Etot;
 }
 
 

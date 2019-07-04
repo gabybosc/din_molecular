@@ -9,18 +9,20 @@
 #include <time.h>
 #include <unistd.h>
 
-#define N 512
+#define N 343
 #define L 9.0 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
 #define T 0.8 //0.728
 #define H 0.001
 
 int main(){
   double dL;
-  double *r, *f, *vel, *r_tabla, *r2_tabla, *f_tabla, *V_tabla;
+  double *r, *f, *vel, *r_tabla, *r2_tabla, *f_tabla, *V_tabla, E;
   int lines, i, *histograma;
   FILE *file;
   srand(time(NULL));
 
+  int N_verlet = 10;
+  
   file = fopen( "tabla_LJ.txt", "r");
   lines = contador_lineas(file);
 
@@ -37,6 +39,7 @@ int main(){
   f_tabla = malloc((lines-1) * sizeof(double));
   V_tabla = malloc((lines-1) * sizeof(double));
   histograma = malloc(2*cbrt(N) * sizeof(int));
+  //Epot = malloc(N_verlet * sizeof(int));
 
   leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
 
@@ -55,10 +58,11 @@ int main(){
   hist(histograma, vel, N, 3, 2);
 
 
-  for(i = 0; i < 100; i++){
-    printf("%d%%\n", i);
-    velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
-    save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
+  for(i = 0; i < N_verlet; i++){
+	E = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
+	printf("%.1f%%, E pot = %lf\n", 100.0*i/N_verlet, E);
+    //*(Epot+i) = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
+    //save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
 
   printf("CONDICIONES FINALES\n");
@@ -80,6 +84,7 @@ int main(){
   free(r_tabla);
   free(V_tabla);
   free(histograma);
+  //free(Epot);
 
   return 0;
 }

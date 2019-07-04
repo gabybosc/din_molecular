@@ -24,9 +24,9 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
 	return 0;
 }
 
-double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_tabla, int N, double L){
+double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, int N, double L){
 	int i, j, indice;
-	double dx, dy, dz, r2, sqrt_r2, fuerza_par;
+	double dx, dy, dz, r2, sqrt_r2, fuerza_par, Epot = 0;
 	double rc2 = pow(2.5, 2);
 
 	//set fuerzas a 0
@@ -60,6 +60,7 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 				indice = find_nearest(r2, tabla_r2, long_tabla);
 				//se puede agregar una interpolacion aca
 				fuerza_par = *(tabla_f+indice);
+				Epot += *(tabla_v+indice);
 
 				*(f+3*j) += fuerza_par * dx / sqrt_r2;   //fx(j)
 				*(f+3*j+1) += fuerza_par * dy / sqrt_r2; //fy(j)
@@ -71,7 +72,7 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 			}// end if radio
 		}//end loop j
 	}//end loop i
-	return 0;
+	return Epot;
 }
 
 int CCP(double *r, int N, double L){//condiciones de contorno periodicas (no republica socialista sovietica)
