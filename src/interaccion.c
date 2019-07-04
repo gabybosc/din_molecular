@@ -26,12 +26,12 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
 
 double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_tabla, int N, double L){
 	int i, j, indice;
-	double dx, dy, dz, r2, sqrt_r2, fuerza_par;
-	double rc2 = pow(2.5, 2);
+	double dx, dy, dz, r2, fuerza_par;
 
 	//set fuerzas a 0
-	for (i=0; i<3*N; i++)
+	for (i=0; i<3*N; i++){
 		*(f+i) = 0;
+	}
 
 	for(j=0; j< N-1; j++){
 		for(i = j+1; i < N; i++){
@@ -40,34 +40,33 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 			dz = *(r+3*j+2) - *(r+3*i+2);
 
 			// si abs(dr) > L/2, lo corregimos tomando su imagen mas cercana
-			while(dx > L/2)
+			if(dx > L/2)
 				dx -= L;
-			while(dx < -L/2)
+			else if(dx < -L/2)
 				dx += L;
-			while(dy > L/2)
+			if(dy > L/2)
 				dy -= L;
-			while(dy < -L/2)
+			else if(dy < -L/2)
 				dy += L;
-			while(dz > L/2)
+			if(dz > L/2)
 				dz -= L;
-			while(dz < -L/2)
+			else if(dz < -L/2)
 				dz += L;
 
 			r2 = pow(dx, 2) + pow(dy, 2) + pow(dz, 2);
 
-			if(r2 < rc2){ //solo dentro del radio de corte
-				sqrt_r2 = sqrt(r2);
+			if(r2 < pow(2.5, 2)){ //solo dentro del radio de corte
 				indice = find_nearest(r2, tabla_r2, long_tabla);
 				//se puede agregar una interpolacion aca
 				fuerza_par = *(tabla_f+indice);
 
-				*(f+3*j) += fuerza_par * dx / sqrt_r2;   //fx(j)
-				*(f+3*j+1) += fuerza_par * dy / sqrt_r2; //fy(j)
-				*(f+3*j+2) += fuerza_par * dz / sqrt_r2; //fz(j)
+				*(f+3*j) += fuerza_par * dx / sqrt(r2);   //fx(j)
+				*(f+3*j+1) += fuerza_par * dy / sqrt(r2); //fy(j)
+				*(f+3*j+2) += fuerza_par * dz / sqrt(r2); //fz(j)
 
-				*(f+3*i) -= fuerza_par * dx / sqrt_r2;   //fx(i)
-				*(f+3*i+1) -= fuerza_par * dy / sqrt_r2; //fy(i)
-				*(f+3*i+2) -= fuerza_par * dz / sqrt_r2; //fz(i)
+				*(f+3*i) -= fuerza_par * dx / sqrt(r2);   //fx(i)
+				*(f+3*i+1) -= fuerza_par * dy / sqrt(r2); //fy(i)
+				*(f+3*i+2) -= fuerza_par * dz / sqrt(r2); //fz(i)
 			}// end if radio
 		}//end loop i
 	}//end loop j
