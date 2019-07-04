@@ -17,6 +17,7 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 		f_buffer[i] = *(f+i);
 		Ecin += pow(*(v+i),2);
 	}
+	Ecin = Ecin/2;
 	
 	//avanzamos x, y, z de la partícula i
 	for (i=0; i<N; i++){
@@ -38,6 +39,8 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 	
 	Etot = Epot + Ecin;
 	fprintf(fp, "%lf\t%lf\t%lf\n",Ecin,Epot,Etot);
+	
+	// AGREGAR UN BUSCADOR DE FUERZA MAXIMA
 	
 	return Etot;
 }
