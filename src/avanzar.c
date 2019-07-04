@@ -7,7 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
-double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla){
+double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, FILE *fp){
 	int i;
 	double h2 = pow(h,2)/2;
 	double Epot, Etot, Ecin=0.0;
@@ -37,6 +37,7 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 	}//end loop i velocidad
 	
 	Etot = Epot + Ecin;
+	fprintf(fp, "%lf\t%lf\t%lf\n",Ecin,Epot,Etot);
 	
 	return Etot;
 }
