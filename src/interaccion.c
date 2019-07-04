@@ -26,7 +26,7 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
 
 double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, int N, double L){
 	int i, j, indice;
-	double dx, dy, dz, r2, sqrt_r2, fuerza_par, Epot = 0;
+	double dx, dy, dz, r2, sqrt_r2, fuerza_par, Epot = 0.0;
 	double rc2 = pow(2.5, 2);
 
 	//set fuerzas a 0
