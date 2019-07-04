@@ -69,8 +69,8 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 				*(f+3*i+1) -= fuerza_par * dy / sqrt_r2; //fy(i)
 				*(f+3*i+2) -= fuerza_par * dz / sqrt_r2; //fz(i)
 			}// end if radio
-		}//end loop i
-	}//end loop j
+		}//end loop j
+	}//end loop i
 	return 0;
 }
 
