@@ -10,8 +10,8 @@
 #include <unistd.h>
 
 #define N 512
-#define L 9.5 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
-#define T 1 //0.728
+#define L 8.5 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
+#define T 0.8 //0.728
 #define H 0.001
 
 int main(){
@@ -43,39 +43,35 @@ int main(){
   dL = set_box(r, N, L);
   set_vel(vel, N, T);
 
-  printf("Lado = %f\nCondiciones iniciales\n",L);
+
+  printf("Lado = %f\nCONDICIONES INICIALES\n",L);
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 
-  /*
-	printf("Histograma vx\n");
-	hist(histograma, vel, N, 3, 0);
-	printf("Histograma vy\n");
-	hist(histograma, vel, N, 3, 1);
-	printf("Histograma vz\n");
-	hist(histograma, vel, N, 3, 2);
-	*/
+  printf("Histograma vx\n");
+  hist(histograma, vel, N, 3, 0);
+  printf("Histograma vy\n");
+  hist(histograma, vel, N, 3, 1);
+  printf("Histograma vz\n");
+  hist(histograma, vel, N, 3, 2);
 
 
-  for(i = 0; i < 5; i++){
-    printf("paso %d\n", i);
+  for(i = 0; i < 10; i++){
+    printf("%d%%\n", 10*i);
     velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, lines-1);
     save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
 
-  printf("Final\n");
+  printf("CONDICIONES FINALES\n");
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 
-  /*
-	printf("Histograma vx\n");
-	hist(histograma, vel, N, 3, 0);
-	printf("Histograma vy\n");
-	hist(histograma, vel, N, 3, 1);
-	printf("Histograma vz\n");
-	hist(histograma, vel, N, 3, 2);
-	*/
+  printf("Histograma vx\n");
+  hist(histograma, vel, N, 3, 0);
+  printf("Histograma vy\n");
+  hist(histograma, vel, N, 3, 1);
+  printf("Histograma vz\n");
+  hist(histograma, vel, N, 3, 2);
 
   fclose(file);
-
   free(r);
   free(f);
   free(vel);

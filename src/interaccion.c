@@ -33,8 +33,8 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 		*(f+i) = 0;
 	}
 
-	for(j=0; j< N-1; j++){
-		for(i = j+1; i < N; i++){
+	for(i=0; i< N-1; i++){
+		for(j = i+1; j < N; j++){
 			dx = *(r+3*j) - *(r+3*i);
 			dy = *(r+3*j+1) - *(r+3*i+1);
 			dz = *(r+3*j+2) - *(r+3*i+2);
@@ -68,8 +68,8 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, int long_
 				*(f+3*i+1) -= fuerza_par * dy / sqrt(r2); //fy(i)
 				*(f+3*i+2) -= fuerza_par * dz / sqrt(r2); //fz(i)
 			}// end if radio
-		}//end loop i
-	}//end loop j
+		}//end loop j
+	}//end loop i
 	return 0;
 }
 
