@@ -22,7 +22,7 @@ int main(){
   srand(time(NULL));
 
   int N_verlet = 10;
-  
+
   file = fopen( "tabla_LJ.txt", "r");
   lines = contador_lineas(file);
 
@@ -62,7 +62,7 @@ int main(){
 	E = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
 	printf("%.1f%%, E pot = %lf\n", 100.0*i/N_verlet, E);
     //*(Epot+i) = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
-    //save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
+    save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
 
   printf("CONDICIONES FINALES\n");
