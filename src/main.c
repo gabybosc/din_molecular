@@ -9,28 +9,28 @@
 #include <time.h>
 #include <unistd.h>
 
-#define N 343
-#define L 9.0 //cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
-#define T 0.8 //0.728
+#define N 512
+#define L 9.0//cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
+#define T 0.728
 #define H 0.001
 
 int main(){
   double dL;
-  double *r, *f, *vel, *r_tabla, *r2_tabla, *f_tabla, *V_tabla, E;
+  double *r, *f, *vel, *r_tabla, *r2_tabla, *f_tabla, *V_tabla, fmax;
   int lines, i, *histograma;
   FILE *file;
   FILE *file_energias;
   char fn[50];
   sprintf(fn,"energias.txt");
   file_energias = fopen(fn, "a");
-  
+
   fprintf(file_energias, "N %d, L %f, T %f\n",N,L,T);
   fprintf(file_energias, "Ecin\tEpot\tEtot\n");
-  
+
   srand(time(NULL));
 
-  int N_verlet = 10;
-  
+  int N_verlet = 2000;
+
   file = fopen( "tabla_LJ.txt", "r");
   lines = contador_lineas(file);
 
@@ -67,10 +67,12 @@ int main(){
 
 
   for(i = 0; i < N_verlet; i++){
-	E = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
-	printf("%.1f%%, E pot = %lf\n", 100.0*i/N_verlet, E);
-    //*(Epot+i) = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1);
-    //save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
+    fmax = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, file_energias);
+    // *(fuerzas_max +i ) = fmax;
+    printf("%.1f%%, fmax = %lf\n", 100.0*i/N_verlet, fmax);
+    // velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, file_energias);
+    if(i%10 == 0)
+      save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
   }
 
   printf("CONDICIONES FINALES\n");
@@ -84,6 +86,7 @@ int main(){
   hist(histograma, vel, N, 3, 2);
 
   fclose(file);
+  fclose(file_energias);
   free(r);
   free(f);
   free(vel);
