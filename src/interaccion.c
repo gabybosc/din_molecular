@@ -58,9 +58,13 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *t
 			if(r2 < rc2){ //solo dentro del radio de corte
 				sqrt_r2 = sqrt(r2);
 				indice = find_nearest(r2, tabla_r2, long_tabla);
-				//se puede agregar una interpolacion aca
-				fuerza_par = *(tabla_f+indice);
-				Epot += *(tabla_v+indice);
+				if (r2 > *(tabla_r2+indice)){
+					fuerza_par = interpolar(tabla_f, indice);
+					Epot += interpolar(tabla_v, indice);
+				}else{
+					fuerza_par = interpolar(tabla_f, indice-1);
+					Epot += interpolar(tabla_v, indice-1);
+				}
 
 				*(f+3*j) += fuerza_par * dx / sqrt_r2;   //fx(j)
 				*(f+3*j+1) += fuerza_par * dy / sqrt_r2; //fy(j)

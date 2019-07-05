@@ -115,3 +115,9 @@ double min(double *pointer, int longitud){
 
 	return ref;
 }
+
+double interpolar(double *pointer, int indice){
+	double valor;
+	valor = (*(pointer+indice) + *(pointer+indice+1))/2;
+	return valor;
+}

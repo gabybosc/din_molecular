@@ -18,26 +18,23 @@ int main(){
   double dL;
   double *r, *f, *vel, *r_tabla, *r2_tabla, *f_tabla, *V_tabla, fmax;
   int lines, i, *histograma;
-  FILE *file;
-  FILE *file_energias;
-  char fn[50];
-  sprintf(fn,"energias.txt");
-  file_energias = fopen(fn, "a");
+  FILE *fp_tab;
+  FILE *fp_en;
+  fp_en = fopen("energias.txt", "a");
 
-  fprintf(file_energias, "N %d, L %f, T %f\n",N,L,T);
-  fprintf(file_energias, "Ecin\tEpot\tEtot\n");
+  fprintf(fp_en, "N %d, L %f, T %f\n",N,L,T);
+  fprintf(fp_en, "Ecin\tEpot\tEtot\n");
 
   srand(time(NULL));
 
-  int N_verlet = 2000;
+  int N_verlet = 100;
 
-  file = fopen( "tabla_LJ.txt", "r");
-  lines = contador_lineas(file);
+  fp_tab = fopen("tabla_LJ.txt", "r");
+  lines = contador_lineas(fp_tab);
 
   // El formato del filename ".lammpstrj", ese VMD lo lee comodamente
-  char filename[255];
-  sprintf(filename, "prueba.lammpstrj");
-  // int N_frames = 100;
+  char fn_vmd[255];
+  sprintf(fn_vmd, "prueba.lammpstrj");
 
   r = malloc(3*N * sizeof(double));
   f = malloc(3*N * sizeof(double));
@@ -47,9 +44,8 @@ int main(){
   f_tabla = malloc((lines-1) * sizeof(double));
   V_tabla = malloc((lines-1) * sizeof(double));
   histograma = malloc(2*cbrt(N) * sizeof(int));
-  //Epot = malloc(N_verlet * sizeof(int));
 
-  leer_tabla(file, r_tabla, r2_tabla, f_tabla, V_tabla);
+  leer_tabla(fp_tab, r_tabla, r2_tabla, f_tabla, V_tabla);
 
   dL = set_box(r, N, L);
   set_vel(vel, N, T);
@@ -67,12 +63,10 @@ int main(){
 
 
   for(i = 0; i < N_verlet; i++){
-    fmax = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, file_energias);
-    // *(fuerzas_max +i ) = fmax;
+    fmax = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, fp_en);
     printf("%.1f%%, fmax = %lf\n", 100.0*i/N_verlet, fmax);
-    // velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, file_energias);
     if(i%10 == 0)
-      save_lammpstrj(filename, r, vel, N, L, i);  // La guardo (append para 0<l)
+      save_lammpstrj(fn_vmd, r, vel, N, L, i/10);  // La guardo (append para 0<l)
   }
 
   printf("CONDICIONES FINALES\n");
@@ -85,8 +79,8 @@ int main(){
   printf("Histograma vz\n");
   hist(histograma, vel, N, 3, 2);
 
-  fclose(file);
-  fclose(file_energias);
+  fclose(fp_tab);
+  fclose(fp_en);
   free(r);
   free(f);
   free(vel);
@@ -95,7 +89,6 @@ int main(){
   free(r_tabla);
   free(V_tabla);
   free(histograma);
-  //free(Epot);
 
   return 0;
 }

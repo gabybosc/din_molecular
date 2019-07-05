@@ -10,5 +10,6 @@ int contador_lineas(FILE *file);
 int leer_tabla(FILE *file, double *r_tabla, double *r2_tabla, double *f_tabla, double *v_tabla);
 double max(double *pointer, int longitud);
 double min(double *pointer, int longitud);
+double interpolar(double *pointer, int indice);
 
 #endif
