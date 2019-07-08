@@ -9,15 +9,16 @@
 #define PI 3.14159
 
 int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//calcula el pot y la fuerza de LJ para r² con epsilon = sigma = 1
-	double offset = 4 * (pow(2.5, -12) - pow(2.5, -6));
+	double rc6 = 1 / (2.5 * 2.5 * 2.5 * 2.5 * 2.5 * 2.5); //es r_c⁻⁶
+	double offset = 4 * rc6 * (rc6 - 1);
 	double r6, r;
 	int i;
 
 	for (i = 0; i < SIZE; i++){
-		r6 = pow(*(r2+i), -3); //es r⁻⁶
+		r6 = 1/(*(r2+i) * *(r2+i) * *(r2+i)); //es r⁻⁶
 		r = sqrt(*(r2+i));
 
-		*(potencial+i) = 4 * (r6 * ( r6 - 1)) - offset;
+		*(potencial+i) = 4 * r6 * (r6 - 1) - offset;
 		*(fuerza + i) = 24 * r6/r * (2 * r6 - 1); //si trabajamos con r2 en lugar de r
 		// *(fuerza + i) = 24 * r6 * (2 * r6 - 1);
 	}//end loop i

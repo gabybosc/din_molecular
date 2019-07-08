@@ -25,19 +25,16 @@ int make_tabla(int SIZE){
 		*(r+i) = r0 + (r_max * i)/SIZE;
 
 	for(i = 0; i < SIZE; i++)
-		*(r2+i) = pow(*(r+i), 2);
+		*(r2+i) = *(r+i) * *(r+i);
 
-	Lennard_Jones(potencial, fuerza, r, SIZE);
+	Lennard_Jones(potencial, fuerza, r2, SIZE);
 
-	char fn[50];
-	sprintf(fn, "tabla_LJ.txt");
-	fp = fopen(fn, "w");
-	fprintf(fp, "r0 = %f, r_max = %f, size = %d", r0, r_max, SIZE);
-	fprintf(fp, "\nr\tr2\tfuerza\tpotencial");
-
+	fp = fopen("tabla_LJ.txt", "w");
+	
 	for(i = 0; i < SIZE; i++){
-		fprintf(fp, "\n%.9f\t%.9f\t%.9f\t%.9f", *(r+i),*(r2+i),*(fuerza+i),*(potencial+i));
+		fprintf(fp, "%.9f\t%.9f\t%.9f\t%.9f\n", *(r+i),*(r2+i),*(fuerza+i),*(potencial+i));
 	}
+	fprintf(fp, "r\tr2\tfuerza\tpotencial\n");
 
 	return 0;
 }
