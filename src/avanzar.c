@@ -10,7 +10,7 @@
 double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, FILE *fp){
 	int i;
 	double h2 = h*h/2;
-	double fmax;
+	//double fmax;
 	double Epot, Etot, Ecin=0.0;
 
 	double f_buffer[3*N]; //para almacenar la fuerza del paso temporal anterior
@@ -41,13 +41,12 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 	for(i=0; i < 3*N; i++)
 		Ecin += *(v+i) * *(v+i);
 	Ecin = Ecin/2;
-		
-	Etot = Epot + Ecin;
-	fprintf(fp, "%lf\t%lf\t%lf\n",Ecin,Epot,Etot);
+	
+	fprintf(fp, "%lf\t%lf\n",Ecin,Epot);
 
-	fmax = max(f, 3*N);
-
-	return fmax;
+	//fmax = max(f, 3*N);
+	//return fmax;
+	return 0;
 }
 
 

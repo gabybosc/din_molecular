@@ -62,9 +62,12 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *t
 				if (r2 > *(tabla_r2+indice)){
 					fuerza_par = interpolar(tabla_f, indice);
 					Epot += interpolar(tabla_v, indice);
-				}else{
+				}else if (r2 < *(tabla_r2+indice)){
 					fuerza_par = interpolar(tabla_f, indice-1);
 					Epot += interpolar(tabla_v, indice-1);
+				}else{
+					fuerza_par = *(tabla_f+indice);
+					Epot += *(tabla_v+indice);
 				}
 
 				*(f+3*j) += fuerza_par * dx / sqrt_r2;   //fx(j)
