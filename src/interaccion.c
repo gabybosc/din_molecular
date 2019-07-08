@@ -27,7 +27,7 @@ int Lennard_Jones(double *potencial, double *fuerza, double *r2, int SIZE){//cal
 double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, int N, double L){
 	int i, j, indice;
 	double dx, dy, dz, r2, sqrt_r2, fuerza_par, Epot = 0.0;
-	double rc2 = pow(2.5, 2);
+	double rc2 = 2.5 * 2.5;
 
 	//set fuerzas a 0
 	for (i=0; i<3*N; i++)
@@ -53,7 +53,7 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *t
 			else if(dz < -L/2)
 				dz += L;
 
-			r2 = pow(dx, 2) + pow(dy, 2) + pow(dz, 2);
+			r2 = dx * dx + dy * dy + dz * dz;
 
 			if(r2 < rc2){ //solo dentro del radio de corte
 				sqrt_r2 = sqrt(r2);

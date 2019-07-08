@@ -44,17 +44,17 @@ return(avg/length);
 int find_nearest(double escalar, double *puntero, int longitud_puntero){//devuelve indice del puntero mas cercano al escalar
 	double diferencia, delta;
 	int indice, i;
+	
+	indice = 0; //indice del mas cercano
+	diferencia = fabs(*puntero - escalar);
 
-	diferencia = abs(*puntero - escalar);
-	indice = 0;
-
-	for (i = 0; i < longitud_puntero; i++){
-		delta = abs(*(puntero+i) - escalar);
-		if (delta < diferencia){
+	for (i=0; i < longitud_puntero; i++){ //loop i en vector
+		delta = fabs(*(puntero+i) - escalar);
+		if (delta < diferencia){ // si delta es menor que el paso anterior
 			diferencia = delta;
 			indice = i;
 		}
-	}//end loop
+	}//end loop i
 
 return indice;
 }

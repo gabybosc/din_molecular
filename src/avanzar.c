@@ -9,16 +9,13 @@
 
 double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, FILE *fp){
 	int i;
-	double h2 = pow(h,2)/2;
+	double h2 = h*h/2;
 	double fmax;
 	double Epot, Etot, Ecin=0.0;
 
 	double f_buffer[3*N]; //para almacenar la fuerza del paso temporal anterior
-	for(i=0; i < 3*N; i++){
+	for(i=0; i < 3*N; i++)
 		f_buffer[i] = *(f+i);
-		Ecin += pow(*(v+i),2);
-	}
-	Ecin = Ecin/2;
 
 	//avanzamos x, y, z de la partícula i
 	for (i=0; i<N; i++){
@@ -37,16 +34,18 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 		*(v+3*i+1) += (f_buffer[3*i+1] + *(f+3*i+1)) * h/2;
 		*(v+3*i+2) += (f_buffer[3*i+2] + *(f+3*i+2)) * h/2;
 
-		if(*(v+3*i) > L * 1000 || *(v+3*i+2) > L *1000 || *(v+3*i+1) > 1000 * L)
+		if(*(v+3*i) > L * 1000 || *(v+3*i+1) > L *1000 || *(v+3*i+2) > 1000 * L)
 			printf("la velocidad se fue\n");
 	}//end loop i velocidad
 
+	for(i=0; i < 3*N; i++)
+		Ecin += *(v+i) * *(v+i);
+	Ecin = Ecin/2;
+		
 	Etot = Epot + Ecin;
 	fprintf(fp, "%lf\t%lf\t%lf\n",Ecin,Epot,Etot);
 
 	fmax = max(f, 3*N);
-
-	// AGREGAR UN BUSCADOR DE FUERZA MAXIMA
 
 	return fmax;
 }

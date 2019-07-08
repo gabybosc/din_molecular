@@ -53,32 +53,33 @@ int main(){
 
   printf("Lado = %f\nCONDICIONES INICIALES\n",L);
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
-
+  
+  /*
   printf("Histograma vx\n");
   hist(histograma, vel, N, 3, 0);
   printf("Histograma vy\n");
   hist(histograma, vel, N, 3, 1);
   printf("Histograma vz\n");
   hist(histograma, vel, N, 3, 2);
-
-
+*/
   for(i = 0; i < N_verlet; i++){
     fmax = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, fp_en);
     printf("%.1f%%, fmax = %lf\n", 100.0*i/N_verlet, fmax);
     if(i%10 == 0)
       save_lammpstrj(fn_vmd, r, vel, N, L, i/10);  // La guardo (append para 0<l)
   }
-
+  
   printf("CONDICIONES FINALES\n");
   printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
-
+  printf("\a");
+  /*
   printf("Histograma vx\n");
   hist(histograma, vel, N, 3, 0);
   printf("Histograma vy\n");
   hist(histograma, vel, N, 3, 1);
   printf("Histograma vz\n");
   hist(histograma, vel, N, 3, 2);
-
+  */
   fclose(fp_tab);
   fclose(fp_en);
   free(r);
