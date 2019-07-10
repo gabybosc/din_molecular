@@ -1,4 +1,4 @@
 #ignora los .a, .e, .o y los temps (los ~)
 *.[oae]
 *~
-#!md.e
+*.txt

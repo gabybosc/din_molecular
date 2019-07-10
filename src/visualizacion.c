@@ -1,6 +1,7 @@
 #include "visualizacion.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -29,7 +30,7 @@ int save_lammpstrj(char *filename, double* x, double* v, int N, double L, int fr
 
 // Funcion que carga un unico frame, el siguiente segun fp
 // Uso los fscanf(..) para saltear lineas sin informacion (como el header)
-int load_frame(void *fp, double* x, double* v, int N, double * L){
+int load_frame(FILE *fp, double* x, double* v, int N, double L){
   char buffer[255], *eof;
   int id, frame, N_file;
   eof = fgets(buffer, 255, fp);
@@ -56,14 +57,14 @@ int load_frame(void *fp, double* x, double* v, int N, double * L){
 }
 
 // Carga un frame especifico de un archivo
-int load_lammpstrj(char *filename, double* x, double* v, int N, double * L, int frame){
-  FILE *fp = fopen(filename, "r");
+int load_lammpstrj(FILE *fp, double* x, double* v, int N, double L, int frame){
+  // FILE *fp = fopen(filename, "r");
   int frame_file = load_frame(fp, x, v, N, L);
   while(frame_file < frame && frame_file >= 0){ // A lo bestia, cargo frames
     frame_file = load_frame(fp, x, v, N, L);    // hasta tener el correcto
   }
-  fclose(fp);
-  if(frame_file == -1) printf("No existe el frame %d en %s\n", frame, filename);
+  // fclose(fp);
+  if(frame_file == -1) printf("No existe el frame %d\n", frame);
   if(frame_file == -2) printf("Numero de particulas incompatible\n");
   return frame_file;
 }

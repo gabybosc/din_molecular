@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 plt.ion()
 
 datos = np.loadtxt("energias.txt", skiprows= 2)
+lambdas = np.loadtxt("coef_verlet.txt", skiprows= 0)
 
 ecin = datos[:, 0]
 epot = datos[:, 1]
@@ -30,8 +31,10 @@ plt.subplot(3,1,3)
 plt.plot(etot, '.')
 plt.plot([etot[0] for i in range(len(ecin))],'r')
 #plt.xlim([0,50])
-#plt.ylim([100000,300000])
+plt.ylim([-2400,0])
 plt.ylabel("E")
 plt.grid()
 
 #plt.savefig("energias.png",dpi=150)
+plt.figure()
+plt.plot(lambdas)
