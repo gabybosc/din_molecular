@@ -106,11 +106,49 @@ double coef_verlet(double *r, int N, double L){
 
   for(i=0; i<N; i++){
     lambda_x += (1/N) * cos((2*PI/a)* (*(r+3*i) - a/2));
-    lambda_y += (1/N) * cos((2*PI/a)*(*(r+3*i+1 ) - a/2));
+    lambda_y += (1/N) * cos((2*PI/a)*(*(r+3*i+1) - a/2));
     lambda_z += (1/N) * cos((2*PI/a)*(*(r+3*i+2) - a/2));
   }
 
   lambda = 1.0/3 * (lambda_x + lambda_z + lambda_y);
 
   return lambda;
+}
+
+double teo_h(double *velocidades, int N){
+	int i,j, indice, *histograma;
+	double *vector;
+	double maxvalue, minvalue, width, H=0;
+	int n_bins = 2*cbrt(N);
+	
+	histograma = malloc(2*cbrt(N) * sizeof(int));
+	vector = malloc(N * sizeof(double));
+
+	for (j=0; j<3; j++){//loop coordenadas
+		for (i=0; i<N; i++)
+			*(vector+i) = *(velocidades+(3*i+j)); //recorre de a 3 lugares, con offset j
+
+		maxvalue = max(vector, N);
+		minvalue = min(vector, N);
+		width=(maxvalue - minvalue)/n_bins;
+	  
+		for (i=0; i<n_bins; i++)
+			*(histograma+i)=0;
+
+		for (i=0; i<N; i++){//loop i histograma
+			if (*(vector+i)==maxvalue){
+				indice = n_bins-1;
+			}else{
+				indice = (int)((*(vector+i) - minvalue)/width);
+			}
+			*(histograma+indice)+=1;
+		}//end loop i histograma
+		
+		for (i=0; i<n_bins; i++)
+			if (*(histograma+i)!=0)
+				H += *(histograma+i) * log(*(histograma+i)/(N*width));
+	}//end loop j (coordenadas)
+	free(vector);
+	free(histograma);
+	return H/(3*N);
 }

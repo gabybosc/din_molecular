@@ -7,11 +7,11 @@
 #include <time.h>
 #include <unistd.h>
 
-double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, FILE *fp){
+double velocity_verlet(double *r, double *v, double *f, int N, double h, double L, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla){
 	int i;
 	double h2 = h*h/2;
 	//double fmax;
-	double Epot, Etot, Ecin=0.0;
+	double Epot;
 
 	double f_buffer[3*N]; //para almacenar la fuerza del paso temporal anterior
 	for(i=0; i < 3*N; i++)
@@ -37,50 +37,18 @@ double velocity_verlet(double *r, double *v, double *f, int N, double h, double 
 		if(*(v+3*i) > L * 1000 || *(v+3*i+1) > L *1000 || *(v+3*i+2) > 1000 * L)
 			printf("la velocidad se fue\n");
 	}//end loop i velocidad
-
-	for(i=0; i < 3*N; i++)
-		Ecin += *(v+i) * *(v+i);
-	Ecin = Ecin/2;
 	
-	fprintf(fp, "%lf\t%lf\n",Ecin,Epot);
-
 	//fmax = max(f, 3*N);
 	//return fmax;
-	return 0;
+	return Epot;
 }
 
-
-int hist(int *histograma, double *velocidades, int longitud, int k, int j){
-	int i, indice, n_bins;
-	double *vector;
-	double maxvalue, minvalue, width;
-
-	vector = malloc(longitud * sizeof(double));
-	for (i=0; i<longitud; i++)
-		*(vector+i) = *(velocidades+(k*i+j)); //recorre de a k lugares, con offset j
-
-	maxvalue = max(vector, longitud);
-	minvalue = min(vector, longitud);
-	n_bins = 2*cbrt(longitud);
-	width=(maxvalue - minvalue)/n_bins;
-
-	//nota: se podria cambiar el tamaño del histograma con histograma=realloc(histograma,n*sizeof(int));
-	for (i=0; i<n_bins; i++)
-		*(histograma+i)=0;
-
-	for (i=0; i<longitud; i++){
-		if (*(vector+i)==maxvalue){
-			indice = n_bins-1;
-		}else{
-			indice = (int)((*(vector+i) - minvalue)/width);
-		}
-		*(histograma+indice)+=1;
-	}//end loop i
-
-	for (i=0; i<n_bins; i++)
-		printf("%d ",*(histograma+i));
-	printf("\n");
-
-	free(vector);
-	return 0;
+double cinetica(double * vel, int N){
+	double Ecin=0.0;
+	int i;
+	
+	for(i=0; i < 3*N; i++)
+		Ecin += *(vel+i) * *(vel+i);
+	Ecin = Ecin/2;
+	return Ecin;
 }
