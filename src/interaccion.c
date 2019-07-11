@@ -83,6 +83,67 @@ double forces(double *r, double *f, double *tabla_r2, double *tabla_f, double *t
 	return Epot;
 }
 
+double forces_presion(double *r, double *f, double *tabla_r2, double *tabla_f, double *tabla_v, int long_tabla, int N, double L, double * pres){
+	int i, j, indice;
+	double dx, dy, dz, r2, sqrt_r2, fuerza_par, Epot = 0.0;
+	double rc2 = 2.5 * 2.5;
+
+	//set fuerzas a 0
+	for (i=0; i<3*N; i++)
+		*(f+i) = 0;
+	*pres = 0;
+
+	for(j=0; j< N-1; j++){
+		for(i = j+1; i < N; i++){
+			dx = *(r+3*j) - *(r+3*i);
+			dy = *(r+3*j+1) - *(r+3*i+1);
+			dz = *(r+3*j+2) - *(r+3*i+2);
+
+			// si abs(dr) > L/2, lo corregimos tomando su imagen mas cercana
+			if(dx > L/2)
+				dx -= L;
+			else if(dx < -L/2)
+				dx += L;
+			if(dy > L/2)
+				dy -= L;
+			else if(dy < -L/2)
+				dy += L;
+			if(dz > L/2)
+				dz -= L;
+			else if(dz < -L/2)
+				dz += L;
+
+			r2 = dx * dx + dy * dy + dz * dz;
+
+			if(r2 < rc2){ //solo dentro del radio de corte
+				sqrt_r2 = sqrt(r2);
+				indice = find_nearest(r2, tabla_r2, long_tabla);
+				if (r2 > *(tabla_r2+indice)){
+					fuerza_par = interpolar(tabla_f, indice);
+					Epot += interpolar(tabla_v, indice);
+				}else if (r2 < *(tabla_r2+indice)){
+					fuerza_par = interpolar(tabla_f, indice-1);
+					Epot += interpolar(tabla_v, indice-1);
+				}else{
+					fuerza_par = *(tabla_f+indice);
+					Epot += *(tabla_v+indice);
+				}
+
+				*(f+3*j) += fuerza_par * dx / sqrt_r2;   //fx(j)
+				*(f+3*j+1) += fuerza_par * dy / sqrt_r2; //fy(j)
+				*(f+3*j+2) += fuerza_par * dz / sqrt_r2; //fz(j)
+
+				*(f+3*i) -= fuerza_par * dx / sqrt_r2;   //fx(i)
+				*(f+3*i+1) -= fuerza_par * dy / sqrt_r2; //fy(i)
+				*(f+3*i+2) -= fuerza_par * dz / sqrt_r2; //fz(i)
+				
+				*pres += *(f+3*j)*dx + *(f+3*j+1) * dy + *(f+3*j+2) * dz; 
+			}// end if radio
+		}//end loop j
+	}//end loop i
+	return Epot;
+}
+
 int CCP(double *r, int N, double L){//condiciones de contorno periodicas (no republica socialista sovietica)
 	// si cae fuera de la caja, lo corregimos
 	int i;
