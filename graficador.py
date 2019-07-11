@@ -2,12 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.ion()
 
-datos = np.loadtxt("energias.txt", skiprows= 2)
-lambdas = np.loadtxt("coef_verlet.txt", skiprows= 0)
+datos = np.loadtxt("energiasL8.46T1.5.txt", skiprows= 2)
+# lambdas = np.loadtxt("coef_verlet_t1.1.txt", skiprows= 0)
 
 ecin = datos[:, 0]
 epot = datos[:, 1]
-etot = datos[:, 2]
+etot = ecin+epot
 
 plt.figure()
 
@@ -36,5 +36,5 @@ plt.ylabel("E")
 plt.grid()
 
 #plt.savefig("energias.png",dpi=150)
-plt.figure()
-plt.plot(lambdas)
+# plt.figure()
+# plt.plot(lambdas)

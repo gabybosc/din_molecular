@@ -9,7 +9,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define N 512
+#define N 125
 #define L cbrt(N/0.8442) //L tiene que ser mayor a 5 para no tener problemas con nuestro radio de corte.
 #define T 1
 #define H 0.001
@@ -20,15 +20,15 @@ int main(){
   int lines, i, *histograma;
   int frame_file;
   FILE *fp_tab, *fp_en, *fp_lambda, *fp_lammps;
-  fp_en = fopen("energias.txt", "a");
-  fp_lambda = fopen("coef_verlet.txt", "a");
-  fp_lammps = fopen("prueba_1000pasos.lammpstrj", "r");
+  fp_en = fopen("energias_T%f.txt", "a", T);
+  // fp_lambda = fopen("coef_verlet.txt", "a");
+  // fp_lammps = fopen("prueba_1000pasos.lammpstrj", "r");
+  fp_tab = fopen("tabla_LJ.txt", "r");
 
   srand(time(NULL));
 
   int N_verlet = 3000;
 
-  fp_tab = fopen("tabla_LJ.txt", "r");
   lines = contador_lineas(fp_tab);
 
   // El formato del filename ".lammpstrj", ese VMD lo lee comodamente
@@ -52,8 +52,8 @@ int main(){
   // set_vel(vel, N, T);
 
   forces(r, f, r2_tabla, f_tabla, V_tabla, lines, N, L);
-  printf("Lado = %f, frame_file = %d\nCONDICIONES INICIALES\n",L, frame_file);
-  printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+  // printf("Lado = %f, frame_file = %d\nCONDICIONES INICIALES\n",L, frame_file);
+  // printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
 
   for(i = 0; i < N_verlet; i++){
     fmax = velocity_verlet(r, vel, f, N, H, L, r2_tabla, f_tabla, V_tabla, lines-1, fp_en);
@@ -65,9 +65,9 @@ int main(){
     }
   }
 
-  printf("CONDICIONES FINALES\n");
-  printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
-  printf("\a");
+  // printf("CONDICIONES FINALES\n");
+  // printf("r=%f %f %f\nvel = %f %f %f\nfuerza = %f %f %f\n", *r, *(r+1), *(r+2), *vel, *(vel+1), *(vel+2), *f, *(f+1), *(f+2));
+  // printf("\a");
   /*
   printf("Histograma vx\n");
   hist(histograma, vel, N, 3, 0);
