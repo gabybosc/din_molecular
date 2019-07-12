@@ -2,3 +2,5 @@
 *.[oae]
 *~
 #!md.e
+*.txt
+*.lammpstrj
